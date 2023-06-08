@@ -4,29 +4,27 @@
 #include <fstream>
 #include <memory>
 
-#include "logging.cpp"
-#include "config.cpp"
-
-using namespace std;
+#include "const.hpp"
+#include "logging.hpp"
+#include "config.hpp"
+#include "fs/fs.hpp"
 
 int main(int argc, const char *argv[]) {
-    try{
-        init_logging();
+    
+    init_logging();
 
-        BOOST_LOG_TRIVIAL(info) << "================================";
-        BOOST_LOG_TRIVIAL(info) << "   kc";
-        BOOST_LOG_TRIVIAL(info) << "================================";
-        BOOST_LOG_TRIVIAL(info) << "starting up....";
+    BOOST_LOG_TRIVIAL(info) << "================================";
+    BOOST_LOG_TRIVIAL(info) << "              kc";
+    BOOST_LOG_TRIVIAL(info) << "================================";
+    BOOST_LOG_TRIVIAL(info) << "starting up....";
 
-        auto config = init_config(argc, argv);
+    auto config = init_config(argc, argv);
 
-        if(config)
-        {
-            BOOST_LOG_TRIVIAL(info) << "hello world";
-        }
-    }
-    catch (const po::error &ex)
+    if(config)
     {
-        BOOST_LOG_TRIVIAL(error) << ex.what();
+        auto env_path = (*config)["path"].as<std::string>();
+        BOOST_LOG_TRIVIAL(info) << "Loading knowledge base from " << env_path;
+
+        kc::walk_dir(env_path);
     }
 }

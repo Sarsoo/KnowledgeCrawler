@@ -1,4 +1,9 @@
-﻿add_executable(kc main.cpp)
+﻿add_executable(kc 
+  main.cpp
+  fs/fs.cpp
+  logging.cpp
+  config.cpp
+)
 
 FetchContent_Declare(
   Boost
