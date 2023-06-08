@@ -12,6 +12,8 @@ std::vector<kc::FileEntry> kc::walk_dir(std::string dir)
 
     for (auto const& dir_entry : fs::recursive_directory_iterator(base_path))
     {
+        if (dir_entry.is_directory()) continue;
+
         auto excluded = false;
         auto dir_entry_path = dir_entry.path();
         auto dir_entry_path_string = dir_entry_path.string();

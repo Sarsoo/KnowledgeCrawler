@@ -1,6 +1,7 @@
 ﻿add_executable(kc 
   main.cpp
   fs/fs.cpp
+  fs/FileEntry.cpp
   logging.cpp
   config.cpp
 )

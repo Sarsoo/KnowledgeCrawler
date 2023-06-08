@@ -12,7 +12,14 @@ class FileEntry {
     fs::directory_entry file_entry;
     fs::path relative_path;
 
+    bool content_loaded();
+    std::string load_content();
+    std::string get_content();
+    void clear_content();
+
     private:
+
+    std::string file_content;
 };
 
 }

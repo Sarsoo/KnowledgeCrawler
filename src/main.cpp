@@ -25,6 +25,6 @@ int main(int argc, const char *argv[]) {
         auto env_path = (*config)["path"].as<std::string>();
         BOOST_LOG_TRIVIAL(info) << "Loading knowledge base from " << env_path;
 
-        kc::walk_dir(env_path);
+        auto entries = kc::walk_dir(env_path);
     }
 }

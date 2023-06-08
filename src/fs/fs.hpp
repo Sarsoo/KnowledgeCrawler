@@ -2,6 +2,7 @@
 
 #include <string>
 #include <filesystem>
+#include <vector>
 
 #include "FileEntry.hpp"
 
