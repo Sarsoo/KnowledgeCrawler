@@ -28,9 +28,8 @@ std::vector<kc::FileEntry> kc::walk_dir(std::string dir)
 
         if (!excluded) 
         {
-            auto entry = kc::FileEntry();
+            auto entry = kc::FileEntry(dir_entry);
 
-            entry.file_entry = dir_entry;
             entry.relative_path = fs::relative(dir_entry_path, base_path);
             
             matched.push_back(entry);

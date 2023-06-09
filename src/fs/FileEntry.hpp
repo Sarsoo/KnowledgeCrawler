@@ -2,12 +2,17 @@
 
 #include <string>
 #include <filesystem>
+
+#include "../parse/Link.hpp"
+
 namespace fs = std::filesystem;
 
 namespace kc {
 
 class FileEntry {
     public:
+
+    FileEntry(fs::directory_entry entry);
 
     fs::directory_entry file_entry;
     fs::path relative_path;
@@ -20,6 +25,7 @@ class FileEntry {
     private:
 
     std::string file_content;
+    bool loaded;
 };
 
 }

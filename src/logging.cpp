@@ -1,12 +1,5 @@
 #include "logging.hpp"
 
-#include <boost/log/core.hpp>
-#include <boost/log/trivial.hpp>
-#include <boost/log/expressions.hpp>
-#include <boost/log/utility/setup/file.hpp>
-#include <boost/log/utility/setup/common_attributes.hpp>
-#include <boost/log/utility/setup/console.hpp>
-
 namespace logging = boost::log;
 namespace src = boost::log::sources;
 namespace sinks = boost::log::sinks;
@@ -27,7 +20,7 @@ void init_logging()
 
     logging::core::get()->set_filter
     (
-        logging::trivial::severity >= logging::trivial::info
+        logging::trivial::severity >= logging::trivial::debug
     );
 
     logging::add_common_attributes();

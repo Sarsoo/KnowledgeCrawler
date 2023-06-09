@@ -14,6 +14,7 @@ std::shared_ptr<po::variables_map> init_config(int argc, const char *argv[])
             ("help", "produce help message")
             ("path,p", po::value<std::string>()->default_value("."), "set root path of knowledge base")
             ("config", po::value<std::string>()->default_value("kc.ini"), "config file location")
+            ("index", po::value<int>()->default_value(1), "index")
         ;
 
         po::options_description cmdline_options;

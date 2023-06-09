@@ -2,6 +2,9 @@
   main.cpp
   fs/fs.cpp
   fs/FileEntry.cpp
+  parse/Link.cpp
+  parse/FileContext.cpp
+  parse/FileContextCache.cpp
   logging.cpp
   config.cpp
 )
