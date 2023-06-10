@@ -25,11 +25,20 @@ void FileContextCache::load(std::string root_path)
 
 void FileContextCache::parse_all()
 {
+    tag_map.clear();
     for (auto context: file_contexts)
     {
-        if (context->file_entry.relative_path.extension() == ".md")
+        if (context->file_entry->relative_path.extension() == ".md")
         {
             context->parse();
+
+            if (context->tags.size() != 0)
+            {
+                for (auto tag : context->tags)
+                {
+                    tag_map[tag].push_back(context->file_entry);
+                }
+            }
         }
     }
 }

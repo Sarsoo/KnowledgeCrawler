@@ -33,14 +33,29 @@ int main(int argc, const char *argv[]) {
 
         auto context = file_cache.get()[(*config)["index"].as<int>()];
         
-        std::cout << context->file_entry.get_content() << std::endl << std::endl << std::endl;
+        std::cout << context->file_entry->get_content() << std::endl << std::endl << std::endl;
 
         std::cout << "links: " << context->links.size() << std::endl;
+        std::cout << "images: " << context->images.size() << std::endl;
         std::cout << "tags: " << context->tags.size() << std::endl << std::endl << std::endl;;
 
         for (auto link : context->links)
         {
-            std::cout << link.original_form << std::endl;
+            std::cout << link.original_form << "  " << link.display << " --- " << link.link << std::endl;
+        }
+
+        std::cout << "tag cache: " << file_cache.tag_map.size() << std::endl;
+
+        for (auto tag : file_cache.tag_map)
+        {
+            std::cout << tag.first << ": ";
+
+            for (auto tag_entry: tag.second)
+            {
+                std::cout << tag_entry->relative_path << ", ";
+            }
+
+            std::cout << std::endl;
         }
 
     }

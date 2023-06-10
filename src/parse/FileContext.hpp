@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <memory>
 #include <regex>
 
 #include "../fs/FileEntry.hpp"
@@ -14,8 +15,9 @@ class FileContext {
 
     FileContext(kc::FileEntry entry);
 
-    kc::FileEntry file_entry;
+    std::shared_ptr<kc::FileEntry> file_entry;
     std::vector<kc::Link> links;
+    std::vector<kc::Link> images;
     std::vector<std::string> tags;
 
     void parse();
