@@ -17,9 +17,9 @@ class FileEntry {
     fs::directory_entry file_entry;
     fs::path relative_path;
 
-    bool content_loaded();
+    bool content_loaded() const;
     std::string load_content();
-    std::string get_content();
+    std::string get_content() const;
     void clear_content();
 
     private:

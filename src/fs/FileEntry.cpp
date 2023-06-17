@@ -11,7 +11,7 @@ FileEntry::FileEntry(fs::directory_entry entry)
     
 }
 
-bool FileEntry::content_loaded()
+bool FileEntry::content_loaded() const
 {
     return loaded;
 }
@@ -25,7 +25,7 @@ std::string FileEntry::load_content()
     return file_content;
 }
 
-std::string FileEntry::get_content()
+std::string FileEntry::get_content() const
 {
     return file_content;
 }
