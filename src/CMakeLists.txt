@@ -1,5 +1,6 @@
 ﻿add_executable(kc 
   main.cpp
+  appcontext.cpp
   fs/fs.cpp
   fs/FileEntry.cpp
   parse/Link.cpp
@@ -8,6 +9,7 @@
   valid/link.cpp
   logging.cpp
   config.cpp
+  image/img.cpp
 )
 
 FetchContent_Declare(
@@ -17,4 +19,7 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(Boost)
 
-target_link_libraries(kc PRIVATE Boost::program_options Boost::log Boost::date_time Boost::filesystem Boost::system Boost::thread Boost::log_setup Boost::chrono Boost::atomic)
+find_package( OpenCV REQUIRED )
+include_directories( ${OpenCV_INCLUDE_DIRS} )
+
+target_link_libraries(kc PRIVATE Boost::program_options Boost::log Boost::date_time Boost::filesystem Boost::system Boost::thread Boost::log_setup Boost::chrono Boost::atomic ${OpenCV_LIBS})

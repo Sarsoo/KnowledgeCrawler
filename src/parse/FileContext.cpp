@@ -37,7 +37,11 @@ void FileContext::parse()
         file_content = image_match.suffix();
     }
 
+#if __APPLE__
     std::regex tag_regex(MD_TAG_REGEX, std::regex::multiline);
+#else
+    std::regex tag_regex(MD_TAG_REGEX);
+#endif
     file_content = file_entry->get_content();
     std::smatch tag_match;
     while(std::regex_search(file_content, tag_match, tag_regex)) {
@@ -46,6 +50,11 @@ void FileContext::parse()
         file_content = tag_match.suffix();
     }
 
+}
+
+std::filesystem::path FileContext::abs_path(kc::Link link)
+{
+    return file_entry->file_entry.path().parent_path() / fs::path(link.link);
 }
 
 }

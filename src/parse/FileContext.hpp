@@ -3,6 +3,7 @@
 #include <vector>
 #include <memory>
 #include <regex>
+#include <filesystem>
 
 #include "../fs/FileEntry.hpp"
 #include "Link.hpp"
@@ -21,6 +22,7 @@ class FileContext {
     std::vector<std::string> tags;
 
     void parse();
+    std::filesystem::path abs_path(kc::Link link);
 
     private:
 

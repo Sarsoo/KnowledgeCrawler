@@ -9,5 +9,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+      - name: Install Deps
+        run: sudo apt -y install libopencv-dev
       - name: Build
         run: mkdir build && cd build && ../cbuild

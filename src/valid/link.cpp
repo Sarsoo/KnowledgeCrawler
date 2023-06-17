@@ -23,7 +23,7 @@ std::vector<kc::FileLinkStateResult> validate_links(const std::vector<std::share
             {
                 if(!link.is_external()) {
                     
-                    auto composed = context->file_entry->file_entry.path().parent_path() / fs::path(link.link);
+                    auto composed = context->abs_path(link);
 
                     auto entry = fs::directory_entry(composed);
 
