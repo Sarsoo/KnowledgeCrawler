@@ -12,10 +12,13 @@ class Link {
     std::string display;
     std::string link;
     std::string sublink;
+    bool is_external() const;
 
     Link(std::string original);
 
     private:
+
+    bool external;
 };
 
 }

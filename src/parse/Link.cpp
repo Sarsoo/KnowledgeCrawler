@@ -16,12 +16,20 @@ Link::Link(std::string original)
 
     link = original_form.substr(opening_link + 1, closing_link - opening_link - 1);
 
-    auto display_pos = original_form.find('#', opening_link);
+    external = link.starts_with("http");
 
-    if(display_pos != std::string::npos)
+    auto sublink_pos = original_form.find('#', opening_link);
+
+    if(sublink_pos != std::string::npos)
     {
-        display = original_form.substr(display_pos + 1, closing_link - display_pos - 1);
+        sublink = original_form.substr(sublink_pos + 1, closing_link - sublink_pos - 1);
+        link = original_form.substr(opening_link + 1, sublink_pos - opening_link - 1);
     }
+}
+
+bool Link::is_external() const
+{
+    return external;
 }
 
 }

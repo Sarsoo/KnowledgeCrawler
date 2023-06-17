@@ -14,8 +14,13 @@ std::shared_ptr<po::variables_map> init_config(int argc, const char *argv[])
             ("help", "produce help message")
             ("path,p", po::value<std::string>()->default_value("."), "set root path of knowledge base")
             ("config", po::value<std::string>()->default_value("kc.ini"), "config file location")
+            ("command", po::value<std::string>(), "command to execute")
+            ("subargs", po::value<std::vector<std::string> >(), "Arguments for command")
             ("index", po::value<int>()->default_value(1), "index")
         ;
+
+        po::positional_options_description pos;
+        pos.add("command", 1).add("subargs", -1);
 
         po::options_description cmdline_options;
         cmdline_options.add(desc);
@@ -30,6 +35,8 @@ std::shared_ptr<po::variables_map> init_config(int argc, const char *argv[])
         auto vm = std::make_shared<po::variables_map>();
         po::store(po::command_line_parser(argc, argv)
                 .options(cmdline_options)
+                .positional(pos)
+                // .allow_unregistered()
                 .run(), 
             *vm);
 

@@ -10,6 +10,10 @@
 #include "config.hpp"
 #include "fs/fs.hpp"
 #include "parse/FileContextCache.hpp"
+#include "valid/link.hpp"
+
+void run_validate(std::shared_ptr<boost::program_options::variables_map> config);
+
 
 int main(int argc, const char *argv[]) {
     
@@ -24,39 +28,30 @@ int main(int argc, const char *argv[]) {
 
     if(config)
     {
-        auto env_path = (*config)["path"].as<std::string>();
-        BOOST_LOG_TRIVIAL(info) << "Loading knowledge base from " << env_path;
-
-        auto file_cache = kc::FileContextCache();
-        file_cache.load(env_path);
-        file_cache.parse_all();
-
-        auto context = file_cache.get()[(*config)["index"].as<int>()];
-        
-        std::cout << context->file_entry->get_content() << std::endl << std::endl << std::endl;
-
-        std::cout << "links: " << context->links.size() << std::endl;
-        std::cout << "images: " << context->images.size() << std::endl;
-        std::cout << "tags: " << context->tags.size() << std::endl << std::endl << std::endl;;
-
-        for (auto link : context->links)
+        if (config->count("command") == 1)
         {
-            std::cout << link.original_form << "  " << link.display << " --- " << link.link << std::endl;
-        }
+            auto command = (*config)["command"].as<std::string>();
 
-        std::cout << "tag cache: " << file_cache.tag_map.size() << std::endl;
-
-        for (auto tag : file_cache.tag_map)
-        {
-            std::cout << tag.first << ": ";
-
-            for (auto tag_entry: tag.second)
+            if (command == "validate")
             {
-                std::cout << tag_entry->relative_path << ", ";
+                run_validate(config);
             }
-
-            std::cout << std::endl;
         }
-
+        else
+        {
+            BOOST_LOG_TRIVIAL(info) << "command not found";
+        }
     }
+}
+
+void run_validate(std::shared_ptr<boost::program_options::variables_map> config)
+{
+    auto env_path = (*config)["path"].as<std::string>();
+    BOOST_LOG_TRIVIAL(info) << "Loading knowledge base from " << env_path;
+
+    auto file_cache = kc::FileContextCache();
+    file_cache.load(env_path);
+    file_cache.parse_all();
+
+    kc::validate_links(file_cache.get());
 }

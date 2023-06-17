@@ -5,6 +5,7 @@
   parse/Link.cpp
   parse/FileContext.cpp
   parse/FileContextCache.cpp
+  valid/link.cpp
   logging.cpp
   config.cpp
 )

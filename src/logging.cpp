@@ -1,5 +1,7 @@
 #include "logging.hpp"
 
+#include <iostream>
+
 namespace logging = boost::log;
 namespace src = boost::log::sources;
 namespace sinks = boost::log::sinks;
@@ -13,10 +15,11 @@ void init_logging()
     (
         keywords::file_name = "kc_%N.log",
         keywords::time_based_rotation = sinks::file::rotation_at_time_point(0, 0, 0),
-        keywords::format = "[%TimeStamp%] [%ThreadID%] [%Severity%] %Message%"
+        keywords::format = "[%TimeStamp%] [%ThreadID%] [%Severity%] %Message%",
+        keywords::open_mode = std::ios::app
     );
 
-    logging::add_console_log(std::cout, boost::log::keywords::format = "[%TimeStamp%] [%Severity%] >> %Message%");
+    // logging::add_console_log(std::cout, boost::log::keywords::format = "[%TimeStamp%] [%Severity%] >> %Message%");
 
     logging::core::get()->set_filter
     (
@@ -24,4 +27,10 @@ void init_logging()
     );
 
     logging::add_common_attributes();
+}
+
+inline void print_and_log(std::string log_line)
+{
+    BOOST_LOG_TRIVIAL(info) << log_line;
+    std::cout << log_line << std::endl;
 }

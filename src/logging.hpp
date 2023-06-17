@@ -8,3 +8,4 @@
 #include <boost/log/utility/setup/console.hpp>
 
 void init_logging();
+void print_and_log(std::string log_line);

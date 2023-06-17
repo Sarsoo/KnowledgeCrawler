@@ -13,7 +13,7 @@ project(kc
     VERSION 
         1.0 
     DESCRIPTION 
-        "C++ scratchpad" 
+        "Knowledge crawler for analysing notes" 
     LANGUAGES 
         CXX)
     
