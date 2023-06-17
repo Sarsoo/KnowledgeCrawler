@@ -2,8 +2,8 @@
 
 namespace kc {
 
-FileContext::FileContext(kc::FileEntry entry)
-: file_entry(std::make_shared<kc::FileEntry>(entry))
+FileContext::FileContext(std::shared_ptr<kc::FileEntry> entry)
+: file_entry(entry)
 {
     
 }
@@ -33,7 +33,7 @@ void FileContext::parse()
     std::smatch image_match;
     while(std::regex_search(file_content, image_match, image_regex)) {
         
-        images.push_back(image_match.str());
+        images.push_back(kc::Link(image_match.str()));
         file_content = image_match.suffix();
     }
 
