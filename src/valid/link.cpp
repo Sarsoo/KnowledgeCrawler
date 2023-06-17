@@ -3,6 +3,8 @@
 #include <filesystem>
 #include <iostream>
 
+#include "../logging.hpp"
+
 namespace fs = std::filesystem;
 
 namespace kc {
@@ -10,6 +12,8 @@ namespace kc {
 std::vector<kc::FileLinkStateResult> validate_links(const std::vector<std::shared_ptr<kc::FileContext>> &contexts)
 {
     std::vector<kc::FileLinkStateResult> ret;
+
+    auto invalid_counter = 0;
 
     for (auto context : contexts)
     {
@@ -25,11 +29,17 @@ std::vector<kc::FileLinkStateResult> validate_links(const std::vector<std::share
 
                     if(!entry.exists())
                     {
-                        std::cout << link.link << " + " << context->file_entry->file_entry.path() << " = " << composed << std::endl;
+                        print_and_log("Invalid link: " + std::string(context->file_entry->file_entry.path()) + " -> " + link.original_form);
+                        invalid_counter++;
                     }
                 }
             }
         }
+    }
+
+    if (invalid_counter == 0)
+    {
+        print_and_log("All links valid");
     }
 
     return ret;

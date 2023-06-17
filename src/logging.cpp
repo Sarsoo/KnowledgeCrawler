@@ -1,6 +1,5 @@
 #include "logging.hpp"
 
-#include <iostream>
 
 namespace logging = boost::log;
 namespace src = boost::log::sources;
@@ -27,10 +26,4 @@ void init_logging()
     );
 
     logging::add_common_attributes();
-}
-
-inline void print_and_log(std::string log_line)
-{
-    BOOST_LOG_TRIVIAL(info) << log_line;
-    std::cout << log_line << std::endl;
 }

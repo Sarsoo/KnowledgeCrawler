@@ -22,7 +22,7 @@ int main(int argc, const char *argv[]) {
     BOOST_LOG_TRIVIAL(info) << "================================";
     BOOST_LOG_TRIVIAL(info) << "              kc";
     BOOST_LOG_TRIVIAL(info) << "================================";
-    BOOST_LOG_TRIVIAL(info) << "starting up....";
+    BOOST_LOG_TRIVIAL(info) << "Starting up....";
 
     auto config = init_config(argc, argv);
 
@@ -39,15 +39,20 @@ int main(int argc, const char *argv[]) {
         }
         else
         {
-            BOOST_LOG_TRIVIAL(info) << "command not found";
+            print_and_log_error("Command not found, exiting");
+            return 1;
         }
+
+        return 0;
     }
+
+    return 1;
 }
 
 void run_validate(std::shared_ptr<boost::program_options::variables_map> config)
 {
     auto env_path = (*config)["path"].as<std::string>();
-    BOOST_LOG_TRIVIAL(info) << "Loading knowledge base from " << env_path;
+    print_and_log("> Loading knowledge base from " + env_path);
 
     auto file_cache = kc::FileContextCache();
     file_cache.load(env_path);
