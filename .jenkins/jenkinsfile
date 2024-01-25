@@ -1,0 +1,25 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Build') {
+            steps {
+                sh 'mkdir bin'
+                dir('bin') {
+                    sh '../cbuild'
+                }
+            }
+        }
+
+//         stage('Test') {
+//             steps {
+//                 dotnetTest project: "Mixonomer.NET.sln"
+//             }
+//         }
+    }
+    post {
+        always {
+            cleanWs()
+        }
+    }
+}
