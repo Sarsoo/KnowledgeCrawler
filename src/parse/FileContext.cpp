@@ -1,11 +1,11 @@
 #include "FileContext.hpp"
 
+#include <utility>
+
 namespace kc {
 
 FileContext::FileContext(std::shared_ptr<kc::FileEntry> entry)
-: file_entry(entry)
-{
-    
+    : file_entry(std::move(entry)), links_parsed(false) {
 }
 
 void FileContext::parse()

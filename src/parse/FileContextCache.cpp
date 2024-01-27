@@ -8,14 +8,14 @@
 
 namespace kc {
 
-void FileContextCache::load(const std::string root_path)
+void FileContextCache::load(const std::string &root_path)
 {
     BOOST_LOG_TRIVIAL(trace) << "Beginning cache load";
 
-    auto entries = kc::walk_dir(root_path);
+    const auto entries = kc::walk_dir(root_path);
     this->root_path.assign(root_path);
 
-    for (auto entry : entries)
+    for (const auto& entry : entries)
     {
         if (entry->relative_path.extension() == ".md")
         {
@@ -43,9 +43,9 @@ void FileContextCache::parse_all()
         {
             context->parse();
 
-            if (context->tags.size() != 0)
+            if (!context->tags.empty())
             {
-                for (auto tag : context->tags)
+                for (const auto& tag : context->tags)
                 {
                     tag_map[tag].push_back(context->file_entry);
                 }

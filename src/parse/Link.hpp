@@ -12,9 +12,9 @@ class Link {
     std::string display;
     std::string link;
     std::string sublink;
-    bool is_external() const;
+    [[nodiscard]] bool is_external() const;
 
-    Link(std::string original);
+    explicit Link(const std::string &original);
 
     private:
 

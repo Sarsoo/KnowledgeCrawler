@@ -41,20 +41,19 @@ std::shared_ptr<po::variables_map> init_config(int argc, const char *argv[])
                 .run(), 
             *vm);
 
-        if (vm->count("config"))
+        if (vm->contains("config"))
         {
             auto config_path = (*vm)["config"].as<std::string>();
             BOOST_LOG_TRIVIAL(info) << "Attempting file config load for " << config_path;
-            
-            std::ifstream ifs{config_path.c_str()};
-            if (ifs) {
+
+            if (std::ifstream ifs{config_path.c_str()}) {
                 BOOST_LOG_TRIVIAL(info) << "File opened, loading...";
                 po::store(po::parse_config_file(ifs, config_file_options), *vm);
             }
         }
         po::notify(*vm);
 
-        if (vm->count("help")) {
+        if (vm->contains("help")) {
             std::cout << desc;
 
             return nullptr;

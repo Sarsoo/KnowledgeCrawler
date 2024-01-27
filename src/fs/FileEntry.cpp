@@ -2,13 +2,12 @@
 
 #include <fstream>
 #include <iostream>
+#include <utility>
 
 namespace kc {
 
 FileEntry::FileEntry(fs::directory_entry entry)
-: file_entry(entry)
-{
-    
+    : file_entry(std::move(entry)), loaded(false) {
 }
 
 bool FileEntry::content_loaded() const

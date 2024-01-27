@@ -20,7 +20,7 @@ public:
     void load_config(int argc, const char *argv[]);
     void load_and_parse_cache();
 
-    std::string command();
+    [[nodiscard]] std::string command() const;
 
 private:
 

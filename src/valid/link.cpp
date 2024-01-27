@@ -15,19 +15,18 @@ std::vector<kc::FileLinkStateResult> validate_links(const std::vector<std::share
 
     auto invalid_counter = 0;
 
-    for (auto context : contexts)
+    for (const auto& context : contexts)
     {
-        if (context->links.size() > 0)
+        if (!context->links.empty())
         {
-            for (auto link: context->links)
+            for (const auto& link: context->links)
             {
                 if(!link.is_external()) {
                     
                     auto composed = context->abs_path(link);
 
-                    auto entry = fs::directory_entry(composed);
-
-                    if(!entry.exists())
+                    if(auto entry = fs::directory_entry(composed);
+                        !entry.exists())
                     {
                         print_and_log("Invalid link: " + std::string(context->file_entry->file_entry.path()) + " -> " + link.original_form);
                         invalid_counter++;

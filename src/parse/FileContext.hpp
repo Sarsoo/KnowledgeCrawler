@@ -14,7 +14,7 @@ namespace kc {
 class FileContext {
     public:
 
-    FileContext(std::shared_ptr<kc::FileEntry> entry);
+    explicit FileContext(std::shared_ptr<kc::FileEntry> entry);
 
     std::shared_ptr<kc::FileEntry> file_entry;
     std::vector<kc::Link> links;

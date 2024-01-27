@@ -5,9 +5,7 @@
 
 namespace kc {
 
-AppContext::AppContext()
-{
-
+AppContext::AppContext(): config_loaded(false) {
 }
 
 void AppContext::load_config(int argc, const char *argv[])
@@ -18,16 +16,15 @@ void AppContext::load_config(int argc, const char *argv[])
 
 void AppContext::load_and_parse_cache()
 {
-    auto env_path = (*config)["path"].as<std::string>();
-    print_and_log("> Loading knowledge base from " + env_path);
+    const auto env_path = (*config)["path"].as<std::string>();
+    print_and_log("Loading knowledge base from " + env_path);
 
     file_cache = std::make_shared<kc::FileContextCache>();
     file_cache->load(env_path);
     file_cache->parse_all();
 }
 
-std::string AppContext::command()
-{
+std::string AppContext::command() const {
     if (config->count("command") == 1)
     {
         return (*config)["command"].as<std::string>();

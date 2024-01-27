@@ -14,8 +14,8 @@
 #include "valid/link.hpp"
 #include "image/img.hpp"
 
-void run_validate(kc::AppContext app_context);
-void run_img(kc::AppContext app_context);
+void run_validate(const kc::AppContext &app_context);
+void run_img(const kc::AppContext &app_context);
 
 
 int main(int argc, const char *argv[]) {
@@ -32,7 +32,7 @@ int main(int argc, const char *argv[]) {
 
     if(app_context.config)
     {
-        auto command = app_context.command();
+        const auto command = app_context.command();
         if (!command.empty())
         {
             if (command == "validate")
@@ -58,12 +58,12 @@ int main(int argc, const char *argv[]) {
     return 1;
 }
 
-void run_validate(kc::AppContext app_context)
+void run_validate(const kc::AppContext &app_context)
 {
     kc::validate_links(app_context.file_cache->get());
 }
 
-void run_img(kc::AppContext app_context)
+void run_img(const kc::AppContext &app_context)
 {
     kc::image_proc(app_context.file_cache->get());
 }

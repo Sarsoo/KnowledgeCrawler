@@ -12,14 +12,14 @@ namespace kc {
 class FileEntry {
     public:
 
-    FileEntry(fs::directory_entry entry);
+    explicit FileEntry(fs::directory_entry entry);
 
     fs::directory_entry file_entry;
     fs::path relative_path;
 
-    bool content_loaded() const;
+    [[nodiscard]] bool content_loaded() const;
     std::string load_content();
-    std::string get_content() const;
+    [[nodiscard]] std::string get_content() const;
     void clear_content();
 
     private:

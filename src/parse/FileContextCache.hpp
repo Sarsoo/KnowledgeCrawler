@@ -10,12 +10,12 @@ namespace kc {
 
 class FileContextCache {
     public:
-    void load(std::string root_path);
+    void load(const std::string &root_path);
     void clear();
-    size_t size() const;
-    std::vector<std::shared_ptr<kc::FileContext>> get() const;
+    [[nodiscard]] size_t size() const;
+    [[nodiscard]] std::vector<std::shared_ptr<kc::FileContext>> get() const;
     void parse_all();
-    std::string get_root_path() const;
+    [[nodiscard]] std::string get_root_path() const;
 
     std::unordered_map<std::string, std::vector<std::shared_ptr<kc::FileEntry>>> tag_map;
 
