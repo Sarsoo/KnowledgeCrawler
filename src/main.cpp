@@ -10,6 +10,8 @@
 #include "config.hpp"
 #include "appcontext.hpp"
 #include "fs/fs.hpp"
+#include "net/http.hpp"
+#include "net/ntfy.hpp"
 #include "parse/FileContextCache.hpp"
 #include "print/print.hpp"
 #include "task/current_tasks.hpp"
@@ -20,6 +22,7 @@ void run_validate(const kc::AppContext &app_context);
 void run_img(const kc::AppContext &app_context);
 void run_print(const kc::AppContext &app_context);
 void run_current_tasks(const kc::AppContext &app_context);
+void run_test_net(const kc::AppContext &app_context);
 
 
 int main(int argc, const char *argv[]) {
@@ -58,6 +61,11 @@ int main(int argc, const char *argv[]) {
             {
                 app_context.load_and_parse_cache(kc::TASKS);
                 run_current_tasks(app_context);
+            }
+            else if (command == "net")
+            {
+                // app_context.load_and_parse_cache(kc::TASKS);
+                run_test_net(app_context);
             }
         }
         else
@@ -105,4 +113,10 @@ void run_current_tasks(const kc::AppContext &app_context)
         BOOST_LOG_TRIVIAL(info) << "Finding current tasks in " << file_cache->get_root_path();
         kc::current_tasks(file_cache->get());
     }
+}
+
+void run_test_net(const kc::AppContext &app_context)
+{
+    kc::notify("ntfy.sheep-ghoul.ts.net",
+        kc::Notification("todo", "next test!"));
 }

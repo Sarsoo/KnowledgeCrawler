@@ -2,6 +2,7 @@
 
 // https://www.boost.org/doc/libs/1_87_0/libs/beast/example/http/client/sync-ssl/http_client_sync_ssl.cpp
 
+namespace kc {
 std::shared_ptr<ssl::stream<beast::tcp_stream>> connect_stream(const std::string &host, int port) {
     // The io_context is required for all I/O
     net::io_context ioc;
@@ -13,7 +14,7 @@ std::shared_ptr<ssl::stream<beast::tcp_stream>> connect_stream(const std::string
     // load_root_certificates(ctx);
 
     // Verify the remote server's certificate
-    ctx.set_verify_mode(ssl::verify_peer);
+    // ctx.set_verify_mode(ssl::verify_peer);
 
     // These objects perform our I/O
     tcp::resolver resolver(ioc);
@@ -65,28 +66,33 @@ void shutdown_stream(const std::shared_ptr<ssl::stream<beast::tcp_stream>> &stre
         throw beast::system_error{ec};
 }
 
-http::response<http::dynamic_body> request(http::verb method, const std::string &host, int port, std::string target) {
+http::response<http::dynamic_body> request(http::verb method, const std::string &host, std::string target, std::string body, std::unique_ptr<std::unordered_map<std::string, std::string>> headers) {
+    return request(method, host, target, 443, body, std::move(headers));
+}
 
+http::response<http::dynamic_body> request(http::verb method, const std::string &host, std::string target, std::string body) {
+    return request(method, host, target, 443, body, nullptr);
+}
+
+http::response<http::dynamic_body> request(http::verb method, const std::string &host, std::string target, int port, std::string body, std::unique_ptr<std::unordered_map<std::string, std::string>> headers) {
     auto stream = connect_stream(host, port);
 
-    // if (method == http::verb::get) {
-    //     // Set up an HTTP GET request message
-    //     http::request<http::string_body> req{method, target, 11};
-    //     req.set(http::field::host, host);
-    //     req.set(http::field::user_agent, BOOST_BEAST_VERSION_STRING);
-    //
-    //     // Send the HTTP request to the remote host
-    //     http::write(stream, req);
-    // }
-    // else if (method == http::verb::post) {
-    //     // Set up an HTTP GET request message
-    //     http::request<json_body> req{method, target, 11};
-    //     req.set(http::field::host, host);
-    //     req.set(http::field::user_agent, BOOST_BEAST_VERSION_STRING);
-    //
-    //     // Send the HTTP request to the remote host
-    //     http::write(stream, req);
-    // }
+    http::request<http::string_body> req{method, target, 11};
+    req.set(http::field::host, host);
+    req.set(http::field::user_agent, BOOST_BEAST_VERSION_STRING);
+
+    if (headers) {
+        for (auto const &kv : *headers) {
+            req.set(kv.first, kv.second);
+        }
+    }
+
+    req.body() = body;
+
+    req.prepare_payload(); // set content-length based on the body
+
+    // Send the HTTP request to the remote host
+    http::write(*stream, req);
 
     auto response = read_response(stream);
 
@@ -95,4 +101,5 @@ http::response<http::dynamic_body> request(http::verb method, const std::string 
     // Write the message to standard out
     std::cout << response << std::endl;
     return response;
+}
 }
