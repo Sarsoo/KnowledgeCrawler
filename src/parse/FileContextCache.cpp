@@ -30,18 +30,22 @@ void FileContextCache::load(const std::string &root_path)
 
 void FileContextCache::parse_all()
 {
+    parse_all(ParseOperations::ALL);
+}
+
+void FileContextCache::parse_all(ParseOperations operations) {
     tag_map.clear();
 
 #if __APPLE__
-    std::for_each(file_contexts.begin(), file_contexts.end(), [this](std::shared_ptr<kc::FileContext> &context)
+    std::for_each(file_contexts.begin(), file_contexts.end(), [this, &operations](std::shared_ptr<kc::FileContext> &context)
 #else
     std::for_each(std::execution::par_unseq, file_contexts.begin(), file_contexts.end(), [this](std::shared_ptr<kc::FileContext> &context)
 #endif
 
-    { 
+    {
         if (context->file_entry->relative_path.extension() == ".md")
         {
-            context->parse();
+            context->parse(operations);
 
             if (!context->tags.empty())
             {

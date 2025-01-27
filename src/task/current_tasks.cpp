@@ -1,16 +1,11 @@
-#include "print.hpp"
+#include "current_tasks.hpp"
+#include "task.hpp"
 
-#include <filesystem>
 #include <iostream>
-
-#include "../logging.hpp"
-#include "../task/task.hpp"
-
-namespace fs = std::filesystem;
 
 namespace kc {
 
-void print_file(const std::vector<std::shared_ptr<kc::FileContext>> &contexts)
+void current_tasks(const std::vector<std::shared_ptr<kc::FileContext>> &contexts)
 {
     auto date = day_clock::local_day();
 

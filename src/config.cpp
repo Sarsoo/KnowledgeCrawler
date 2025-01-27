@@ -12,7 +12,7 @@ std::shared_ptr<po::variables_map> init_config(int argc, const char *argv[])
         po::options_description desc("Config");
         desc.add_options()
             ("help", "produce help message")
-            ("path,p", po::value<std::string>()->default_value("."), "set root path of knowledge base")
+            ("path,p", po::value<std::vector<std::string>>(), "set root path of knowledge base")
             ("config", po::value<std::string>()->default_value("kc.ini"), "config file location")
             ("out,o", po::value<std::string>()->default_value("."), "output file location")
             ("command", po::value<std::string>(), "command to execute")
@@ -65,5 +65,7 @@ std::shared_ptr<po::variables_map> init_config(int argc, const char *argv[])
     catch (const po::error &ex)
     {
         BOOST_LOG_TRIVIAL(error) << ex.what();
+
+        return nullptr;
     }
 }

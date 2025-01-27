@@ -15,6 +15,7 @@ class FileContextCache {
     [[nodiscard]] size_t size() const;
     [[nodiscard]] std::vector<std::shared_ptr<kc::FileContext>> get() const;
     void parse_all();
+    void parse_all(ParseOperations operations);
     [[nodiscard]] std::string get_root_path() const;
 
     std::unordered_map<std::string, std::vector<std::shared_ptr<kc::FileEntry>>> tag_map;

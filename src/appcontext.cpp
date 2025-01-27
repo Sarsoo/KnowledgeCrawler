@@ -1,5 +1,7 @@
 #include "appcontext.hpp"
 
+#include <boost/beast/core/file.hpp>
+
 #include "config.hpp"
 #include "logging.hpp"
 
@@ -14,14 +16,23 @@ void AppContext::load_config(int argc, const char *argv[])
     config_loaded = true;
 }
 
-void AppContext::load_and_parse_cache()
-{
-    const auto env_path = (*config)["path"].as<std::string>();
-    print_and_log("Loading knowledge base from " + env_path);
+void AppContext::load_and_parse_cache() {
+    load_and_parse_cache(ParseOperations::ALL);
+}
 
-    file_cache = std::make_shared<kc::FileContextCache>();
-    file_cache->load(env_path);
-    file_cache->parse_all();
+void AppContext::load_and_parse_cache(ParseOperations operations)
+{
+    const auto env_paths = (*config)["path"].as<std::vector<std::string>>();
+
+    for (const auto& env_path : env_paths) {
+        print_and_log("Loading knowledge base from " + env_path);
+
+        auto file_cache = std::make_shared<kc::FileContextCache>();
+        file_cache->load(env_path);
+        file_cache->parse_all(operations);
+
+        file_caches.push_back(file_cache);
+    }
 }
 
 std::string AppContext::command() const {
