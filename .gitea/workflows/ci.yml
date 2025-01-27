@@ -13,6 +13,6 @@ jobs:
           github-server-url: https://gitea.sheep-ghoul.ts.net
 
       - name: Install Deps
-        run: sudo apt update cmake && sudo apt -y install cmake
+        run: sudo apt update && sudo apt -y install cmake
       - name: Build
         run: mkdir build && cd build && ../cbuild
