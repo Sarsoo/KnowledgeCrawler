@@ -12,7 +12,7 @@ jobs:
         with: 
           github-server-url: https://gitea.sheep-ghoul.ts.net
 
-#      - name: Install Deps
-#        run: sudo apt -y install libopencv-dev
+      - name: Install Deps
+        run: sudo apt -y install cmake
       - name: Build
         run: mkdir build && cd build && ../cbuild
