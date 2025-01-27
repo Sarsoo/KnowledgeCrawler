@@ -39,7 +39,7 @@ void FileContextCache::parse_all(ParseOperations operations) {
 #if __APPLE__
     std::for_each(file_contexts.begin(), file_contexts.end(), [this, &operations](std::shared_ptr<kc::FileContext> &context)
 #else
-    std::for_each(std::execution::par_unseq, file_contexts.begin(), file_contexts.end(), [this](std::shared_ptr<kc::FileContext> &context)
+    std::for_each(std::execution::par_unseq, file_contexts.begin(), file_contexts.end(), [this, &operations](std::shared_ptr<kc::FileContext> &context)
 #endif
 
     {
