@@ -1,0 +1,6 @@
+.gitea
+.github
+.jenkins
+.vscode
+build
+cmake-build-debug
