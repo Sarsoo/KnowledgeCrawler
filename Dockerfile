@@ -1,5 +1,5 @@
 FROM alpine:latest as build
-RUN apk add cmake
+RUN apk add make cmake
 
 WORKDIR /kc
 COPY . ./
