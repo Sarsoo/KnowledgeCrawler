@@ -9,7 +9,9 @@
   valid/link.cpp
   logging.cpp
   config.cpp
-  image/img.cpp
+  print/print.cpp
+  task/task.cpp
+  #  image/img.cpp
 )
 
 FetchContent_Declare(
@@ -19,7 +21,7 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(Boost)
 
-find_package( OpenCV REQUIRED )
-include_directories( ${OpenCV_INCLUDE_DIRS} )
+#find_package( OpenCV REQUIRED )
+#include_directories( ${OpenCV_INCLUDE_DIRS} )
 
 target_link_libraries(kc PRIVATE Boost::program_options Boost::log Boost::date_time Boost::filesystem Boost::system Boost::thread Boost::log_setup Boost::chrono Boost::atomic ${OpenCV_LIBS})

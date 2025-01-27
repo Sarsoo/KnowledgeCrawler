@@ -11,11 +11,13 @@
 #include "appcontext.hpp"
 #include "fs/fs.hpp"
 #include "parse/FileContextCache.hpp"
+#include "print/print.hpp"
 #include "valid/link.hpp"
-#include "image/img.hpp"
+//#include "image/img.hpp"
 
 void run_validate(const kc::AppContext &app_context);
 void run_img(const kc::AppContext &app_context);
+void run_print(const kc::AppContext &app_context);
 
 
 int main(int argc, const char *argv[]) {
@@ -45,6 +47,11 @@ int main(int argc, const char *argv[]) {
                 app_context.load_and_parse_cache();
                 run_img(app_context);
             }
+            else if (command == "print")
+            {
+                app_context.load_and_parse_cache();
+                run_print(app_context);
+            }
         }
         else
         {
@@ -65,5 +72,10 @@ void run_validate(const kc::AppContext &app_context)
 
 void run_img(const kc::AppContext &app_context)
 {
-    kc::image_proc(app_context.file_cache->get());
+//    kc::image_proc(app_context.file_cache->get());
+}
+
+void run_print(const kc::AppContext &app_context)
+{
+    kc::print_file(app_context.file_cache->get());
 }
