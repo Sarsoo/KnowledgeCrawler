@@ -1,5 +1,5 @@
 FROM alpine:latest as build
-RUN apk add make cmake
+RUN apk add cmake make clang build-base llvm-static llvm-dev clang-static clang-dev
 
 WORKDIR /kc
 COPY . ./
