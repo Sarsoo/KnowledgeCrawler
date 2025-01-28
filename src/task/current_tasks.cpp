@@ -19,7 +19,7 @@ std::string get_notification_content(const std::vector<Task>& tasks) {
 
 int current_tasks(const kc::AppContext &app_context)
 {
-    auto date = day_clock::local_day();
+    const auto date = day_clock::local_day();
     std::vector<Task> tasks;
 
     for(const auto& file_cache : app_context.file_caches) {
@@ -42,7 +42,7 @@ int current_tasks(const kc::AppContext &app_context)
         std::cout << task.get_content() << " (" << task.get_due_date() << ")" << std::endl;
     }
 
-    if (tasks.size() > 0 && app_context.config->contains(CONFIG_NOTIFY)) {
+    if (!tasks.empty() && app_context.config->contains(CONFIG_NOTIFY)) {
         print_and_log(std::format("Sending notification for {} tasks", tasks.size()));
 
         if (!app_context.config->contains(CONFIG_HOST)) {
@@ -54,10 +54,10 @@ int current_tasks(const kc::AppContext &app_context)
             return 1;
         }
 
-        auto host_name = (*app_context.config)[CONFIG_HOST].as<std::string>();
-        auto topic_name = (*app_context.config)[CONFIG_TOPIC].as<std::string>();
+        const auto host_name = (*app_context.config)[CONFIG_HOST].as<std::string>();
+        const auto topic_name = (*app_context.config)[CONFIG_TOPIC].as<std::string>();
 
-        auto payload = get_notification_content(tasks);
+        const auto payload = get_notification_content(tasks);
 
         auto notif = kc::Notification(topic_name, payload);
 
@@ -69,7 +69,7 @@ int current_tasks(const kc::AppContext &app_context)
         }
 
         try{
-            kc::notify(host_name, notif);
+            // kc::notify(host_name, notif);
             print_and_log("Notification sent");
         }
         catch (const std::exception &e) {

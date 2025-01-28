@@ -24,7 +24,7 @@ void FileContext::parse()
     parse_tasks();
 }
 
-void FileContext::parse(ParseOperations operations)
+void FileContext::parse(const ParseOperations operations)
 {
     if (!file_entry->content_loaded())
     {
@@ -53,7 +53,7 @@ void FileContext::parse(ParseOperations operations)
 }
 
 void FileContext::parse_links() {
-    std::regex link_regex(MD_MD_LINK_REGEX);
+    const std::regex link_regex(MD_MD_LINK_REGEX);
     std::string file_content = file_entry->get_content();
     std::smatch link_match;
     while(std::regex_search(file_content, link_match, link_regex)) {
@@ -64,7 +64,7 @@ void FileContext::parse_links() {
 }
 
 void FileContext::parse_images() {
-    std::regex image_regex(MD_IMAGE_LINK_REGEX);
+    const std::regex image_regex(MD_IMAGE_LINK_REGEX);
     std::string file_content = file_entry->get_content();
     std::smatch image_match;
     while(std::regex_search(file_content, image_match, image_regex)) {
@@ -90,7 +90,7 @@ void FileContext::parse_tags() {
 }
 
 void FileContext::parse_tasks() {
-    std::regex task_regex(TASK_REGEX);
+    const std::regex task_regex(TASK_REGEX);
     std::string file_content = file_entry->get_content();
     std::smatch task_match;
     while(std::regex_search(file_content, task_match, task_regex)) {

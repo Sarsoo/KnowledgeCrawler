@@ -17,7 +17,7 @@ class Task {
     public:
 
     explicit Task(const std::string &task_content, TaskState state, const std::string &due_date_str);
-    explicit Task(const std::string &task_content, std::string state, const std::string &due_date_str);
+    explicit Task(const std::string &task_content, const std::string &state, const std::string &due_date_str);
     explicit Task(const std::string &task_content, TaskState state, const date &due_date_str);
     explicit Task(const std::string &task_content, TaskState state);
     explicit Task(const std::string &task_content);
@@ -33,7 +33,7 @@ class Task {
     TaskState state;
 };
 
-bool is_current(Task task);
-bool is_current(Task task, date current_date);
+bool is_current(const Task &task);
+bool is_current(const Task &task, date current_date);
 
 }

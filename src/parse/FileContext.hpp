@@ -40,7 +40,7 @@ class FileContext {
 
     void parse();
     void parse(ParseOperations operations);
-    std::filesystem::path abs_path(const kc::Link &link) const;
+    [[nodiscard]] std::filesystem::path abs_path(const kc::Link &link) const;
 
     private:
 

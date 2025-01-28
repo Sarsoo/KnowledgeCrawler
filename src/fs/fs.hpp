@@ -11,6 +11,6 @@ namespace fs = std::filesystem;
 
 namespace kc {
 
-std::vector<std::shared_ptr<kc::FileEntry>> walk_dir(std::string dir);
+std::vector<std::shared_ptr<kc::FileEntry>> walk_dir(const std::string &dir);
 
 }

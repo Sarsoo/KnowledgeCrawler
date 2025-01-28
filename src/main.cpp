@@ -45,8 +45,7 @@ int main(int argc, const char *argv[]) {
 
         if(app_context.config)
         {
-            const auto command = app_context.command();
-            if (!command.empty())
+            if (const auto command = app_context.command(); !command.empty())
             {
                 if (command == CMD_VALIDATE_TASKS)
                 {

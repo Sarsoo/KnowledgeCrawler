@@ -33,4 +33,20 @@ include_directories( ${OpenCV_INCLUDE_DIRS} )
 target_sources(kc PRIVATE image/img.cpp)
 endif()
 
-target_link_libraries(kc PRIVATE Boost::program_options Boost::log Boost::date_time Boost::filesystem Boost::system Boost::thread Boost::log_setup Boost::chrono Boost::atomic Boost::asio Boost::beast Boost::json Boost::algorithm ${OPENSSL_LIBRARIES} ${OpenCV_LIBS})
+target_link_libraries(kc PRIVATE
+        Boost::program_options
+        Boost::log
+        Boost::date_time
+        Boost::filesystem
+        Boost::system
+        Boost::thread
+        Boost::log_setup
+        Boost::chrono
+        Boost::atomic
+        Boost::asio
+        Boost::beast
+        Boost::json
+        Boost::algorithm
+        ${OPENSSL_LIBRARIES}
+        ${OpenCV_LIBS}
+)

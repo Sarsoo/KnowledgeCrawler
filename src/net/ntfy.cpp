@@ -4,7 +4,7 @@
 
 namespace kc {
 
-constexpr std::string get_urgency_string(NotificationUrgency u){
+constexpr std::string get_urgency_string(const NotificationUrgency u){
     switch(u){
         case NotificationUrgency::MAX:
             return "max";
@@ -20,7 +20,7 @@ constexpr std::string get_urgency_string(NotificationUrgency u){
     return "default";
 }
 
-void notify(std::string host, Notification notification)
+void notify(const std::string &host, const Notification &notification)
 {
     request(
         http::verb::post,

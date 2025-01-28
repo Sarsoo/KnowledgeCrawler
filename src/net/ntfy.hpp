@@ -58,6 +58,6 @@ private:
     NotificationUrgency priority;
 };
 
-void notify(std::string host, Notification notification);
+void notify(const std::string &host, const Notification &notification);
 
 }

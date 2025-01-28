@@ -18,7 +18,7 @@ bool FileEntry::content_loaded() const
 std::string FileEntry::load_content()
 {
     std::ifstream ifs(file_entry.path());
-    file_content.assign( (std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()) );
+    file_content.assign( std::istreambuf_iterator<char>(ifs), std::istreambuf_iterator<char>() );
     loaded = true;
 
     return file_content;

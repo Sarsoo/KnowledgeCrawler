@@ -12,7 +12,7 @@ namespace kc {
 
 void print_file(const std::vector<std::shared_ptr<kc::FileContext>> &contexts)
 {
-    auto date = day_clock::local_day();
+    const auto date = day_clock::local_day();
 
     for (const auto &entry : contexts) {
 

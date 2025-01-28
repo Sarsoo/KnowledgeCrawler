@@ -5,12 +5,11 @@
 
 static const std::string exclusions[] = {".git", ".obsidian"};
 
-std::vector<std::shared_ptr<kc::FileEntry>> kc::walk_dir(const std::string dir)
+std::vector<std::shared_ptr<kc::FileEntry>> kc::walk_dir(const std::string &dir)
 {
     auto matched = std::vector<std::shared_ptr<kc::FileEntry>>();
-    const auto base_path = fs::path(dir);
 
-    for (auto const& dir_entry : fs::recursive_directory_iterator(base_path))
+    for (const auto base_path = fs::path(dir); auto const& dir_entry : fs::recursive_directory_iterator(base_path))
     {
         if (dir_entry.is_directory()) continue;
 

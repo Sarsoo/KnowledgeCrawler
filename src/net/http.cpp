@@ -90,8 +90,8 @@ void request(http::verb method, const std::string &host, std::string target, int
     req.set(http::field::user_agent, BOOST_BEAST_VERSION_STRING);
 
     if (headers) {
-        for (auto const &kv : *headers) {
-            req.set(kv.first, kv.second);
+        for (const auto &[fst, snd] : *headers) {
+            req.set(fst, snd);
         }
     }
 

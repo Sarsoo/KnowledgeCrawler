@@ -2,7 +2,7 @@
 
 namespace kc {
 
-constexpr TaskState get_task_state(char c){
+constexpr TaskState get_task_state(const char c){
     switch(c){
         case ' ':
             return TaskState::NOT_STARTED;
@@ -17,7 +17,7 @@ constexpr TaskState get_task_state(char c){
     return TaskState::UNKNOWN;
 }
 
-constexpr char get_task_state(TaskState c){
+constexpr char get_task_state(const TaskState c){
     switch(c){
         case TaskState::NOT_STARTED:
             return ' ';
@@ -32,29 +32,29 @@ constexpr char get_task_state(TaskState c){
     return '?';
 }
 
-bool is_current(Task task) {
+bool is_current(const Task &task) {
     return is_current(task, day_clock::local_day());
 }
 
 
-bool is_current(Task task, date current_date) {
+bool is_current(const Task &task, const date current_date) {
     return task.get_due_date() <= current_date
     && (task.get_state() == TaskState::NOT_STARTED || task.get_state() == TaskState::IN_PROGRESS);
 }
 
-Task::Task(const std::string &task_content, TaskState state, const std::string &due_date_str)
+Task::Task(const std::string &task_content, const TaskState state, const std::string &due_date_str)
     : task_content(task_content), state(state), due_date(from_simple_string(due_date_str)) {
 }
 
-Task::Task(const std::string &task_content, std::string state, const std::string &due_date_str)
+Task::Task(const std::string &task_content, const std::string &state, const std::string &due_date_str)
     : task_content(task_content), state(get_task_state(state[0])), due_date(from_simple_string(due_date_str)) {
 }
 
-Task::Task(const std::string &task_content, TaskState state, const date &due_date_str)
+Task::Task(const std::string &task_content, const TaskState state, const date &due_date_str)
     : task_content(task_content), state(state), due_date(due_date_str) {
 }
 
-Task::Task(const std::string &task_content, TaskState state)
+Task::Task(const std::string &task_content, const TaskState state)
     : task_content(task_content), state(state) {
 }
 

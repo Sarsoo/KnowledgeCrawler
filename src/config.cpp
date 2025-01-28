@@ -91,9 +91,7 @@ std::shared_ptr<po::variables_map> init_config(int argc, const char *argv[])
 
             if (vm->count("command") == 1)
             {
-                auto command = (*vm)["command"].as<std::string>();
-
-                if (command == CMD_CURRENT_TASKS) {
+                if (auto command = (*vm)["command"].as<std::string>(); command == CMD_CURRENT_TASKS) {
                     std::cout << visible_general << std::endl << current_tasks_options;
                 }
             }
