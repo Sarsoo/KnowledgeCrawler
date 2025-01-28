@@ -15,16 +15,21 @@ bool FileEntry::content_loaded() const
     return loaded;
 }
 
-std::string FileEntry::load_content()
+std::vector<std::string> FileEntry::load_content()
 {
     std::ifstream ifs(file_entry.path());
-    file_content.assign( std::istreambuf_iterator<char>(ifs), std::istreambuf_iterator<char>() );
+
+    for (std::string line; std::getline(ifs, line);)
+    {
+        file_content.emplace_back(line);
+    }
+
     loaded = true;
 
     return file_content;
 }
 
-std::string FileEntry::get_content() const
+std::vector<std::string> FileEntry::get_content() const
 {
     return file_content;
 }

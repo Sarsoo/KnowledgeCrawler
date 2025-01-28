@@ -18,13 +18,13 @@ class FileEntry {
     fs::path relative_path;
 
     [[nodiscard]] bool content_loaded() const;
-    std::string load_content();
-    [[nodiscard]] std::string get_content() const;
+    std::vector<std::string> load_content();
+    [[nodiscard]] std::vector<std::string> get_content() const;
     void clear_content();
 
     private:
 
-    std::string file_content;
+    std::vector<std::string> file_content;
     bool loaded;
 };
 
