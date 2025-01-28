@@ -1,7 +1,10 @@
 #include "FileContextCache.hpp"
 
 #include <algorithm>
+
+#if __cpp_lib_execution //checking to see if the <execution> header is there
 #include <execution>
+#endif
 
 #include "../fs/fs.hpp"
 #include "../logging.hpp"
@@ -36,12 +39,12 @@ void FileContextCache::parse_all()
 void FileContextCache::parse_all(ParseOperations operations) {
     tag_map.clear();
 
-#if __APPLE__
-    std::for_each(file_contexts.begin(), file_contexts.end(), [this, &operations](std::shared_ptr<kc::FileContext> &context)
+#ifdef __cpp_lib_execution
+    std::mutex m;
+    std::for_each(std::execution::par, file_contexts.begin(), file_contexts.end(), [this, &operations, &m](std::shared_ptr<kc::FileContext> &context)
 #else
-    std::for_each(std::execution::par_unseq, file_contexts.begin(), file_contexts.end(), [this, &operations](std::shared_ptr<kc::FileContext> &context)
+    std::ranges::for_each(file_contexts, [this, &operations](const std::shared_ptr<kc::FileContext> &context)
 #endif
-
     {
         if (context->file_entry->relative_path.extension() == ".md")
         {
@@ -49,6 +52,9 @@ void FileContextCache::parse_all(ParseOperations operations) {
 
             if (!context->tags.empty())
             {
+#ifdef __cpp_lib_execution
+                std::lock_guard<std::mutex> lock{m};
+#endif
                 for (const auto& tag : context->tags)
                 {
                     tag_map[tag].push_back(context->file_entry);

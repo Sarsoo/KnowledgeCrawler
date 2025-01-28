@@ -5,12 +5,16 @@
 #include "config.hpp"
 #include "logging.hpp"
 
+#if __cpp_lib_execution //checking to see if the <execution> header is there
+#include <execution>
+#endif
+
 namespace kc {
 
 AppContext::AppContext(): config_loaded(false) {
 }
 
-void AppContext::load_config(int argc, const char *argv[])
+void AppContext::load_config(const int argc, const char *argv[])
 {
     config = init_config(argc, argv);
     config_loaded = true;
@@ -29,15 +33,24 @@ void AppContext::load_and_parse_cache(ParseOperations operations)
 
     const auto env_paths = (*config)["path"].as<std::vector<std::string>>();
 
-    for (const auto& env_path : env_paths) {
+#ifdef __cpp_lib_execution
+    std::mutex m;
+    std::for_each(std::execution::par, env_paths.begin(), env_paths.end(), [this, &operations, &m](const std::string &env_path)
+#else
+    std::ranges::for_each(env_paths, [this, &operations](const std::string &env_path)
+#endif
+    {
         print_and_log("Loading knowledge base from " + env_path);
 
-        auto file_cache = std::make_shared<kc::FileContextCache>();
+        const auto file_cache = std::make_shared<kc::FileContextCache>();
         file_cache->load(env_path);
         file_cache->parse_all(operations);
 
+#ifdef __cpp_lib_execution
+        std::lock_guard<std::mutex> lock{m};
+#endif
         file_caches.push_back(file_cache);
-    }
+    });
 }
 
 std::string AppContext::command() const {
@@ -45,10 +58,7 @@ std::string AppContext::command() const {
     {
         return (*config)["command"].as<std::string>();
     }
-    else
-    {
-        return "";
-    }
+    return "";
 }
 
 }
