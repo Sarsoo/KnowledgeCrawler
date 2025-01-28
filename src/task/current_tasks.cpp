@@ -33,7 +33,7 @@ int current_tasks(const kc::AppContext &app_context)
         }
     }
 
-    std::ranges::sort(tasks, [](Task a, Task b)
+    std::ranges::sort(tasks, [](const Task &a, const Task &b)
     {
         return a.get_due_date() < b.get_due_date();
     });
@@ -42,7 +42,9 @@ int current_tasks(const kc::AppContext &app_context)
         std::cout << task.get_content() << " (" << task.get_due_date() << ")" << std::endl;
     }
 
-    if (app_context.config->contains(CONFIG_NOTIFY)) {
+    if (tasks.size() > 0 && app_context.config->contains(CONFIG_NOTIFY)) {
+        print_and_log(std::format("Sending notification for {} tasks", tasks.size()));
+
         if (!app_context.config->contains(CONFIG_HOST)) {
             print_and_log_error("No NTFY host provided");
             return 1;
@@ -59,7 +61,20 @@ int current_tasks(const kc::AppContext &app_context)
 
         auto notif = kc::Notification(topic_name, payload);
 
-        kc::notify(host_name, notif);
+        if (app_context.config->contains(CONFIG_TAGS)) {
+            for (auto const& tag : (*app_context.config)[CONFIG_TAGS].as<std::vector<std::string>>()) {
+                BOOST_LOG_TRIVIAL(info) << "Tagging notification with " << tag;
+                notif.add_tag(tag);
+            }
+        }
+
+        try{
+            kc::notify(host_name, notif);
+            print_and_log("Notification sent");
+        }
+        catch (const std::exception &e) {
+            print_and_log_error(std::format("Exception occurred while sending notification - {}", e.what()));
+        }
     }
 
     return 0;

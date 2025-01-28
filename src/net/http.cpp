@@ -2,6 +2,7 @@
 
 #include <boost/beast/version.hpp>
 #include <boost/log/trivial.hpp>
+#include <utility>
 
 // https://www.boost.org/doc/libs/1_87_0/libs/beast/example/http/client/sync-ssl/http_client_sync_ssl.cpp
 
@@ -38,11 +39,11 @@ void shutdown_stream(const std::shared_ptr<ssl::stream<beast::tcp_stream>> &stre
 }
 
 void request(http::verb method, const std::string &host, std::string target, std::string body, std::unique_ptr<std::unordered_map<std::string, std::string>> headers) {
-    request(method, host, target, 443, body, std::move(headers));
+    request(std::move(method), std::move(host), std::move(target), 443, std::move(body), std::move(headers));
 }
 
 void request(http::verb method, const std::string &host, std::string target, std::string body) {
-    request(method, host, target, 443, body, nullptr);
+    request(std::move(method), std::move(host), std::move(target), 443, std::move(body), nullptr);
 }
 
 void request(http::verb method, const std::string &host, std::string target, int port, std::string body, std::unique_ptr<std::unordered_map<std::string, std::string>> headers) {

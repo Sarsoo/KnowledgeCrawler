@@ -10,7 +10,6 @@ static const std::string CMD_VALIDATE_TASKS = "validate";
 static const std::string CMD_IMG_TASKS = "img";
 static const std::string CMD_PRINT_TASKS = "print";
 static const std::string CMD_CURRENT_TASKS = "current";
-static const std::string CMD_NET_TASKS = "net";
 
 
 ///////////////
@@ -21,6 +20,7 @@ static const std::string CONFIG_NOTIFY = "notify";
 static const std::string CONFIG_HOST = "host";
 static const std::string CONFIG_TOPIC = "topic";
 static const std::string CONFIG_TITLE = "title";
+static const std::string CONFIG_TAGS = "tag";
 
 
 ///////////////

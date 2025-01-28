@@ -22,6 +22,11 @@ void AppContext::load_and_parse_cache() {
 
 void AppContext::load_and_parse_cache(ParseOperations operations)
 {
+    if (!config->contains("path")) {
+        print_and_log_error("No paths provided");
+        return;
+    }
+
     const auto env_paths = (*config)["path"].as<std::vector<std::string>>();
 
     for (const auto& env_path : env_paths) {

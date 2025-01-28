@@ -14,7 +14,6 @@
     task/current_tasks.cpp
     net/ntfy.cpp
     net/http.cpp
-    #  image/img.cpp
 )
 
 FetchContent_Declare(
@@ -27,7 +26,11 @@ FetchContent_MakeAvailable(Boost)
 find_package(OpenSSL REQUIRED)
 include_directories(${OPENSSL_INCLUDE_DIR})
 
-#find_package( OpenCV REQUIRED )
-#include_directories( ${OpenCV_INCLUDE_DIRS} )
+if(OPENCV)
+add_compile_definitions(WITH_OPENCV)
+find_package( OpenCV REQUIRED )
+include_directories( ${OpenCV_INCLUDE_DIRS} )
+target_sources(kc PRIVATE image/img.cpp)
+endif()
 
 target_link_libraries(kc PRIVATE Boost::program_options Boost::log Boost::date_time Boost::filesystem Boost::system Boost::thread Boost::log_setup Boost::chrono Boost::atomic Boost::asio Boost::beast Boost::json Boost::algorithm ${OPENSSL_LIBRARIES} ${OpenCV_LIBS})

@@ -7,6 +7,7 @@
 #include <boost/program_options.hpp>
 
 #include "const.hpp"
+#include "logging.hpp"
 
 po::options_description get_current_tasks_options() {
     po::options_description options("Current Tasks");
@@ -15,6 +16,7 @@ po::options_description get_current_tasks_options() {
         (CONFIG_HOST.c_str(), po::value<std::string>(), "ntfy hostname")
         (CONFIG_TOPIC.c_str(), po::value<std::string>(), "ntfy topic name")
         (CONFIG_TITLE.c_str(), po::value<std::string>(), "title for notifications")
+        (CONFIG_TAGS.c_str(), po::value<std::vector<std::string>>(), "tags to add to notification")
     ;
 
     return options;
@@ -28,6 +30,7 @@ std::shared_ptr<po::variables_map> init_config(int argc, const char *argv[])
             ("help,h", "produce help message")
             ("path,p", po::value<std::vector<std::string>>(), "set root path of knowledge base")
             ("config", po::value<std::string>()->default_value("kc.ini"), "config file location")
+            ("logpath", po::value<std::string>()->default_value("."), "log folder location")
         ;
 
         po::options_description hidden_general("Hidden");
@@ -75,10 +78,10 @@ std::shared_ptr<po::variables_map> init_config(int argc, const char *argv[])
         if (vm->contains("config"))
         {
             auto config_path = (*vm)["config"].as<std::string>();
-            BOOST_LOG_TRIVIAL(info) << "Attempting file config load for " << config_path;
+            // BOOST_LOG_TRIVIAL(info) << "Attempting file config load for " << config_path;
 
             if (std::ifstream ifs{config_path.c_str()}) {
-                BOOST_LOG_TRIVIAL(info) << "File opened, loading...";
+                // BOOST_LOG_TRIVIAL(info) << "File opened, loading...";
                 po::store(po::parse_config_file(ifs, config_file_options), *vm);
             }
         }
@@ -107,7 +110,7 @@ std::shared_ptr<po::variables_map> init_config(int argc, const char *argv[])
     }
     catch (const po::error &ex)
     {
-        BOOST_LOG_TRIVIAL(error) << ex.what();
+        std::cout << ex.what() << std::endl;
 
         return nullptr;
     }

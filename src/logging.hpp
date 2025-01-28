@@ -9,7 +9,7 @@
 #include <boost/log/utility/setup/common_attributes.hpp>
 #include <boost/log/utility/setup/console.hpp>
 
-void init_logging();
+void init_logging(const std::string &log_path);
 
 inline void print_and_log(std::string log_line)
 {
