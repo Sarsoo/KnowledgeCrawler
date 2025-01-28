@@ -21,7 +21,7 @@
 void run_validate(const kc::AppContext &app_context);
 void run_img(const kc::AppContext &app_context);
 void run_print(const kc::AppContext &app_context);
-void run_current_tasks(const kc::AppContext &app_context);
+int run_current_tasks(const kc::AppContext &app_context);
 void run_test_net(const kc::AppContext &app_context);
 
 
@@ -42,27 +42,27 @@ int main(int argc, const char *argv[]) {
         const auto command = app_context.command();
         if (!command.empty())
         {
-            if (command == "validate")
+            if (command == CMD_VALIDATE_TASKS)
             {
                 app_context.load_and_parse_cache(kc::LINKS);
                 run_validate(app_context);
             }
-            else if (command == "img")
+            else if (command == CMD_IMG_TASKS)
             {
                 app_context.load_and_parse_cache(kc::IMAGES);
                 run_img(app_context);
             }
-            else if (command == "print")
+            else if (command == CMD_PRINT_TASKS)
             {
                 app_context.load_and_parse_cache();
                 run_print(app_context);
             }
-            else if (command == "current")
+            else if (command == CMD_CURRENT_TASKS)
             {
                 app_context.load_and_parse_cache(kc::TASKS);
-                run_current_tasks(app_context);
+                return run_current_tasks(app_context);
             }
-            else if (command == "net")
+            else if (command == CMD_NET_TASKS)
             {
                 // app_context.load_and_parse_cache(kc::TASKS);
                 run_test_net(app_context);
@@ -106,13 +106,10 @@ void run_print(const kc::AppContext &app_context)
     }
 }
 
-void run_current_tasks(const kc::AppContext &app_context)
+int run_current_tasks(const kc::AppContext &app_context)
 {
     BOOST_LOG_TRIVIAL(info) << "Running \"Current Tasks\" command";
-    for(const auto& file_cache : app_context.file_caches) {
-        BOOST_LOG_TRIVIAL(info) << "Finding current tasks in " << file_cache->get_root_path();
-        kc::current_tasks(file_cache->get());
-    }
+    return kc::current_tasks(app_context);
 }
 
 void run_test_net(const kc::AppContext &app_context)

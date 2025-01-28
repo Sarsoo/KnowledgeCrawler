@@ -1,9 +1,54 @@
 #include "http.hpp"
 
+#include <boost/beast/version.hpp>
+#include <boost/log/trivial.hpp>
+
 // https://www.boost.org/doc/libs/1_87_0/libs/beast/example/http/client/sync-ssl/http_client_sync_ssl.cpp
 
 namespace kc {
-std::shared_ptr<ssl::stream<beast::tcp_stream>> connect_stream(const std::string &host, int port) {
+
+http::response<http::dynamic_body> read_response(const std::shared_ptr<ssl::stream<beast::tcp_stream>> &stream) {
+    // This buffer is used for reading and must be persisted
+    beast::flat_buffer buffer;
+
+    // Declare a container to hold the response
+    http::response<http::dynamic_body> res;
+
+    // Receive the HTTP response
+    BOOST_LOG_TRIVIAL(debug) << "Reading HTTP response";
+    http::read(*stream, buffer, res);
+    BOOST_LOG_TRIVIAL(debug) << "Received response from (" << res.result_int() << ")";
+
+    return res;
+}
+
+void shutdown_stream(const std::shared_ptr<ssl::stream<beast::tcp_stream>> &stream) {
+    // Gracefully close the socket
+    beast::error_code ec;
+    BOOST_LOG_TRIVIAL(debug) << "Gracefully shutting down stream";
+    stream->shutdown(ec);
+    if(ec == net::error::eof)
+    {
+        // Rationale:
+        // http://stackoverflow.com/questions/25587403/boost-asio-ssl-async-shutdown-always-finishes-with-an-error
+        ec = {};
+    }
+    if(ec)
+        throw beast::system_error{ec};
+}
+
+void request(http::verb method, const std::string &host, std::string target, std::string body, std::unique_ptr<std::unordered_map<std::string, std::string>> headers) {
+    request(method, host, target, 443, body, std::move(headers));
+}
+
+void request(http::verb method, const std::string &host, std::string target, std::string body) {
+    request(method, host, target, 443, body, nullptr);
+}
+
+void request(http::verb method, const std::string &host, std::string target, int port, std::string body, std::unique_ptr<std::unordered_map<std::string, std::string>> headers) {
+
+    BOOST_LOG_TRIVIAL(info) << "Opening connection to [" << host << ":" << port << "]";
+
     // The io_context is required for all I/O
     net::io_context ioc;
 
@@ -28,54 +73,16 @@ std::shared_ptr<ssl::stream<beast::tcp_stream>> connect_stream(const std::string
     }
 
     // Look up the domain name
+    BOOST_LOG_TRIVIAL(debug) << "Resolving IP for [" << host << "]";
     auto const results = resolver.resolve(host, std::to_string(port));
 
     // Make the connection on the IP address we get from a lookup
+    BOOST_LOG_TRIVIAL(debug) << "Connecting stream [" << host << ":" << port << "]";
     beast::get_lowest_layer(*stream).connect(results);
 
     // Perform the SSL handshake
+    BOOST_LOG_TRIVIAL(debug) << "Performing TLS handshake [" << host << ":" << port << "]";
     stream->handshake(ssl::stream_base::client);
-
-    return stream;
-}
-
-http::response<http::dynamic_body> read_response(const std::shared_ptr<ssl::stream<beast::tcp_stream>> &stream) {
-    // This buffer is used for reading and must be persisted
-    beast::flat_buffer buffer;
-
-    // Declare a container to hold the response
-    http::response<http::dynamic_body> res;
-
-    // Receive the HTTP response
-    http::read(*stream, buffer, res);
-
-    return res;
-}
-
-void shutdown_stream(const std::shared_ptr<ssl::stream<beast::tcp_stream>> &stream) {
-    // Gracefully close the socket
-    beast::error_code ec;
-    stream->shutdown(ec);
-    if(ec == net::error::eof)
-    {
-        // Rationale:
-        // http://stackoverflow.com/questions/25587403/boost-asio-ssl-async-shutdown-always-finishes-with-an-error
-        ec = {};
-    }
-    if(ec)
-        throw beast::system_error{ec};
-}
-
-http::response<http::dynamic_body> request(http::verb method, const std::string &host, std::string target, std::string body, std::unique_ptr<std::unordered_map<std::string, std::string>> headers) {
-    return request(method, host, target, 443, body, std::move(headers));
-}
-
-http::response<http::dynamic_body> request(http::verb method, const std::string &host, std::string target, std::string body) {
-    return request(method, host, target, 443, body, nullptr);
-}
-
-http::response<http::dynamic_body> request(http::verb method, const std::string &host, std::string target, int port, std::string body, std::unique_ptr<std::unordered_map<std::string, std::string>> headers) {
-    auto stream = connect_stream(host, port);
 
     http::request<http::string_body> req{method, target, 11};
     req.set(http::field::host, host);
@@ -92,14 +99,11 @@ http::response<http::dynamic_body> request(http::verb method, const std::string 
     req.prepare_payload(); // set content-length based on the body
 
     // Send the HTTP request to the remote host
+    BOOST_LOG_TRIVIAL(debug) << "Writing HTTP request to stream [" << host << ":" << port << "]";
     http::write(*stream, req);
 
     auto response = read_response(stream);
 
     shutdown_stream(stream);
-
-    // Write the message to standard out
-    std::cout << response << std::endl;
-    return response;
 }
 }

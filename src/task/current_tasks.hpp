@@ -1,11 +1,10 @@
 #pragma once
 
-#include <filesystem>
-#include <vector>
-#include "../parse/FileContext.hpp"
+#include "../appcontext.hpp"
+#include "../net/ntfy.hpp"
 
 namespace kc {
 
-    void current_tasks(const std::vector<std::shared_ptr<kc::FileContext>> &contexts);
+    int current_tasks(const kc::AppContext &app_context);
 
 }

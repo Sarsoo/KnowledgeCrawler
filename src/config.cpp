@@ -6,28 +6,59 @@
 
 #include <boost/program_options.hpp>
 
+#include "const.hpp"
+
+po::options_description get_current_tasks_options() {
+    po::options_description options("Current Tasks");
+    options.add_options()
+        (CONFIG_NOTIFY.c_str(), po::bool_switch(), "send notification to notify")
+        (CONFIG_HOST.c_str(), po::value<std::string>(), "ntfy hostname")
+        (CONFIG_TOPIC.c_str(), po::value<std::string>(), "ntfy topic name")
+        (CONFIG_TITLE.c_str(), po::value<std::string>(), "title for notifications")
+    ;
+
+    return options;
+}
+
 std::shared_ptr<po::variables_map> init_config(int argc, const char *argv[])
 {
     try {
-        po::options_description desc("Config");
-        desc.add_options()
-            ("help", "produce help message")
+        po::options_description visible_general("KC Config");
+        visible_general.add_options()
+            ("help,h", "produce help message")
             ("path,p", po::value<std::vector<std::string>>(), "set root path of knowledge base")
             ("config", po::value<std::string>()->default_value("kc.ini"), "config file location")
-            ("out,o", po::value<std::string>()->default_value("."), "output file location")
-            ("command", po::value<std::string>(), "command to execute")
-            ("subargs", po::value<std::vector<std::string> >(), "Arguments for command")
-            ("index", po::value<int>()->default_value(1), "index")
         ;
 
-        po::positional_options_description pos;
-        pos.add("command", 1).add("subargs", -1);
+        po::options_description hidden_general("Hidden");
+        hidden_general.add_options()
+            ("command", po::value<std::string>(), "command to execute")
+        ;
 
+        po::positional_options_description positional;
+        positional.add("command", 1);
+
+        auto current_tasks_options = get_current_tasks_options();
+
+        /////////
+        // CMD
+        /////////
         po::options_description cmdline_options;
-        cmdline_options.add(desc);
+        cmdline_options
+            .add(visible_general)
+            .add(hidden_general)
+            .add(current_tasks_options)
+        ;
 
+        /////////
+        // FILE
+        /////////
         po::options_description config_file_options;
-        config_file_options.add(desc);
+        config_file_options
+            .add(visible_general)
+            .add(hidden_general)
+            .add(current_tasks_options)
+        ;
 
         ////////////
         // PARSE
@@ -35,10 +66,10 @@ std::shared_ptr<po::variables_map> init_config(int argc, const char *argv[])
 
         auto vm = std::make_shared<po::variables_map>();
         po::store(po::command_line_parser(argc, argv)
+                .positional(positional)
                 .options(cmdline_options)
-                .positional(pos)
                 // .allow_unregistered()
-                .run(), 
+                .run(),
             *vm);
 
         if (vm->contains("config"))
@@ -54,7 +85,19 @@ std::shared_ptr<po::variables_map> init_config(int argc, const char *argv[])
         po::notify(*vm);
 
         if (vm->contains("help")) {
-            std::cout << desc;
+
+            if (vm->count("command") == 1)
+            {
+                auto command = (*vm)["command"].as<std::string>();
+
+                if (command == CMD_CURRENT_TASKS) {
+                    std::cout << visible_general << std::endl << current_tasks_options;
+                }
+            }
+            else
+            {
+                std::cout << visible_general;
+            }
 
             return nullptr;
         }
