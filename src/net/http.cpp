@@ -28,6 +28,10 @@ void shutdown_stream(const std::shared_ptr<ssl::stream<beast::tcp_stream>> &stre
     beast::error_code ec;
     BOOST_LOG_TRIVIAL(debug) << "Gracefully shutting down stream";
     stream->shutdown(ec);
+    stream->lowest_layer().shutdown(boost::asio::ip::tcp::socket::shutdown_both, ec);
+    stream->lowest_layer().cancel(ec);
+    stream->lowest_layer().close();
+
     if(ec == net::error::eof)
     {
         // Rationale:

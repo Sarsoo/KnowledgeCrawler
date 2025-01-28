@@ -71,7 +71,7 @@ void FileContext::parse_links() {
             }
         }
         else {
-            BOOST_LOG_TRIVIAL(error) << "Skipping line because too long: " << line;
+            BOOST_LOG_TRIVIAL(trace) << "Skipping line because too long: " << line;
         }
     }
 }
@@ -91,7 +91,7 @@ void FileContext::parse_images() {
             }
         }
         else {
-            BOOST_LOG_TRIVIAL(error) << "Skipping line because too long: " << line;
+            BOOST_LOG_TRIVIAL(trace) << "Skipping line because too long: " << line;
         }
     }
 }
@@ -115,7 +115,7 @@ void FileContext::parse_tags() {
             }
         }
         else {
-            BOOST_LOG_TRIVIAL(error) << "Skipping line because too long: " << line;
+            BOOST_LOG_TRIVIAL(trace) << "Skipping line because too long: " << line;
         }
     }
 }
@@ -135,7 +135,7 @@ void FileContext::parse_tasks() {
             }
         }
         else {
-            BOOST_LOG_TRIVIAL(error) << "Skipping line because too long: " << line;
+            BOOST_LOG_TRIVIAL(trace) << "Skipping line because too long: " << line;
         }
     }
 }
