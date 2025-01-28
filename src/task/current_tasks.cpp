@@ -69,7 +69,7 @@ int current_tasks(const kc::AppContext &app_context)
         }
 
         try{
-            // kc::notify(host_name, notif);
+            kc::notify(host_name, notif);
             print_and_log("Notification sent");
         }
         catch (const std::exception &e) {
